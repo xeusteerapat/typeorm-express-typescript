@@ -5,32 +5,32 @@ import { User } from '../entity/User';
 export class UserController {
   private userRepository = getRepository(User);
 
-  async all(request: Request, response: Response, next: NextFunction) {
+  async all(req: Request, res: Response, next: NextFunction) {
     return this.userRepository.find();
   }
 
-  async one(request: Request, response: Response, next: NextFunction) {
-    return this.userRepository.findOne(request.params.id);
+  async one(req: Request, res: Response, next: NextFunction) {
+    return this.userRepository.findOne(req.params.id);
   }
 
-  async save(request: Request, response: Response, next: NextFunction) {
-    return this.userRepository.save(request.body);
+  async save(req: Request, res: Response, next: NextFunction) {
+    return this.userRepository.save(req.body);
   }
 
-  async update(request: Request, response: Response, next: NextFunction) {
+  async update(req: Request, res: Response, next: NextFunction) {
     const targetUser = new User();
-    targetUser.firstName = request.body.firstName;
-    targetUser.lastName = request.body.lastName;
-    targetUser.age = request.body.age;
+    targetUser.firstName = req.body.firstName;
+    targetUser.lastName = req.body.lastName;
+    targetUser.age = req.body.age;
 
-    await this.userRepository.update(request.params.id, targetUser);
-    const updatedUser = await this.userRepository.findOne(request.params.id);
-    response.send(updatedUser);
+    await this.userRepository.update(req.params.id, targetUser);
+    const updatedUser = await this.userRepository.findOne(req.params.id);
+    res.send(updatedUser);
   }
 
-  async remove(request: Request, response: Response, next: NextFunction) {
-    let userToRemove = await this.userRepository.findOne(request.params.id);
+  async remove(req: Request, response: Response, next: NextFunction) {
+    let userToRemove = await this.userRepository.findOne(req.params.id);
     await this.userRepository.remove(userToRemove);
-    response.send('User has been deleted.');
+    response.send(`User id ${req.params.id} has been deleted.`);
   }
 }
